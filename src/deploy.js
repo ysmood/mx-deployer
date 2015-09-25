@@ -1,31 +1,35 @@
 'use strict';
 
 import kit from 'nokit';
+import utils from './utils';
 
-let cs = kit.require('colors/safe');
-let { spawn } = kit;
+let br = kit.require('brush');
 let info = JSON.parse(process.argv[2]);
-let temp = kit.path.join('/tmp', info.name + Date.now());
 
-kit.logs('begin deploy:', info.gitUrl);
+if (utils.isMaliciousPath(info.gitUrl)) {
+    throw new Error(`gitUrl is illegal: ${info.gitUrl}`);
+}
+
+let gitTmp = kit.path.join('/tmp/git', info.gitUrl);
+
+function spawn () {
+    kit.logs.apply(0, [br.cyan()].concat(arguments));
+    kit.spawn.apply(0, arguments);
+}
 
 (async function () {
-    kit.logs(cs.yellow('remove:'), temp);
-    await kit.remove(temp);
+    kit.logs('begin deploy:', info.gitUrl);
 
-    await spawn('git', ['clone', '-b', info.branch, info.gitUrl, temp]);
+    await spawn('git', ['clone', '-b', info.branch, info.gitUrl, gitTmp]);
 
-    await spawn(
-        'bash',
-        [info.preDeploy],
-        { cwd: temp }
-    );
+    if (info.preDeploy)
+        await spawn('bash', [info.preDeploy], { cwd: gitTmp });
 
-    kit.logs(cs.yellow('remove:'), info.dist);
+    kit.logs(br.yellow('remove:'), info.dist);
     await kit.remove(info.dist);
 
-    kit.logs(cs.cyan('copy:'), temp + '/asset', 'to', info.dist);
+    kit.logs(br.cyan('copy:'), temp + '/asset', 'to', info.dist);
     await kit.copy(temp + '/asset', info.dist);
 
-    kit.logs(cs.green('deploy done.'));
+    kit.logs(br.green('deploy done.'));
 })();

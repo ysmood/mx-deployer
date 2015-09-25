@@ -4,7 +4,7 @@ import kit from 'nokit';
 
 process.env.NODE_ENV = 'development';
 
-let cs = kit.require('colors/safe');
+let br = kit.require('brush');
 let proxy = kit.require('proxy');
 let { match, select } = proxy;
 let { spawn } = require('child_process');
@@ -14,17 +14,17 @@ let port = 8710;
 let app = proxy.flow();
 
 app.push(
-    select({ url: match('/deploy') }, (ctx) => {
+    select(match('/deploy'), (ctx) => {
         ctx.req.on('data', (data) => {
             let info = JSON.parse(data);
-            kit.logs(cs.cyan('deploy:'), info.gitUrl);
+            kit.logs(br.cyan('deploy:'), info.gitUrl);
 
             let proc = spawn('babel-node', ['deploy', data], {
                 cwd: __dirname
             });
 
             let kill = () => {
-                kit.logs(cs.red('kill task'), info.gitUrl);
+                kit.logs(br.red('kill task'), info.gitUrl);
                 proc.kill();
             };
 

@@ -19,5 +19,54 @@
   "bugs": {
     "url": "https://github.com/ysmood/mx-deployer/issues"
   },
-  "homepage": "https://github.com/ysmood/mx-deployer#readme"
+  "homepage": "https://github.com/ysmood/mx-deployer#readme",
+  "dependencies": {
+    "babel-runtime": "5.8.25",
+    "commander": "^2.8.1",
+    "nokit": "0.14.7",
+    "path-to-regexp": "1.2.1",
+    "send": "0.13.0"
+  },
+  "files": [
+    "lib"
+  ],
+  "devDependencies": {
+    "babel": "5.8.23",
+    "babel-eslint": "4.1.3",
+    "eslint": "1.5.1",
+    "webpack": "1.12.2"
+  },
+  "eslintConfig": {
+    "parser": "babel-eslint",
+    "rules": {
+      "indent": [
+        2,
+        4
+      ],
+      "linebreak-style": [
+        2,
+        "unix"
+      ],
+      "semi": [
+        2,
+        "always"
+      ],
+      "no-trailing-spaces": 2,
+      "space-before-function-paren": [
+        2,
+        "always"
+      ],
+      "eqeqeq": [
+        2,
+        "allow-null"
+      ],
+      "no-console": 0,
+      "no-debugger": 0
+    },
+    "env": {
+      "browser": true,
+      "node": true
+    },
+    "extends": "eslint:recommended"
+  }
 }

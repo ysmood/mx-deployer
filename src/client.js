@@ -1,33 +1,32 @@
 import kit from 'nokit';
-let br = kit.require('brush');
-let _ = kit._;
+import cmder from 'commander';
 
-export default async (opts) => {
+let br = kit.require('brush');
+
+cmder
+    .option('--src', 'the src directory is relative to the git repo [.]', '.')
+    .option('--dist', 'the dist directory [/tmp]', '/tmp')
+    .option('--host', 'the host of mx-deployer service', '127.0.0.1:8710')
+    .option('--preDeploy', 'the script to run before deploy', 'pre-deploy.sh')
+    .option('--postDeploy', 'the script to run after deploy', 'after-deploy.sh')
+.parse(process.argv);
+
+(async () => {
     let exec = kit.promisify(require('child_process').exec);
-    let packInfo = require('./package.json');
-    let url;
+    let gitUrl;
 
     try {
-        url = await exec('git config --get remote.origin.url');
+        gitUrl = await exec('git config --get remote.origin.url');
     } catch (err) {
         kit.err(br.red('please make sure you have set git remote correctly'));
     }
 
-    url = url.trim();
-
-    if (!_.endsWith(_.trimRight(url, '.git'), packInfo.name)) {
-        return kit.err('please keep the git repo name the same with the name of package.json');
-    }
+    gitUrl = gitUrl.trim();
 
     return kit.request({
         method: 'POST',
-        url: opts.testHost + '/deploy',
+        url: cmder.host + '/deploy',
         resPipe: process.stdout,
-        reqData: JSON.stringify({
-            name: packInfo.name,
-            branch: opts.testBranch,
-            gitUrl: url,
-            preDeploy: 'pre-deploy.sh'
-        })
+        reqData: JSON.stringify(cmder.options.map(o => o.long.slice(2)))
     });
-};
+})();
