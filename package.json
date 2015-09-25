@@ -1,0 +1,23 @@
+{
+  "name": "mx-deployer",
+  "version": "0.0.1",
+  "description": "a auto deployer client & server",
+  "main": "lib/index.js",
+  "scripts": {
+    "test": "no test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ysmood/mx-deployer.git"
+  },
+  "keywords": [
+    "auto",
+    "deployer"
+  ],
+  "author": "http://ysmood.org",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/ysmood/mx-deployer/issues"
+  },
+  "homepage": "https://github.com/ysmood/mx-deployer#readme"
+}
