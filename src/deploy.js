@@ -20,7 +20,12 @@ function spawn () {
 (async function () {
     kit.logs('begin deploy:', info.gitUrl);
 
-    await spawn('git', ['clone', '-b', info.branch, info.gitUrl, gitTmp]);
+    if (await kit.dirExists(gitTmp)) {
+        await spawn('git', ['pull', '-b', info.branch, info.gitUrl, gitTmp]);
+    } else {
+        await spawn('git', ['clone', '-b', info.branch, info.gitUrl, gitTmp]);
+    }
+
 
     if (info.preDeploy)
         await spawn('bash', [info.preDeploy], { cwd: gitTmp });
