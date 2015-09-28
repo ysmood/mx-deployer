@@ -6,7 +6,7 @@ export default async (opts) => {
         removeTmp: false,
         removeDest: false,
         gitUrl: null,
-        branch: 'master',
+        ref: 'master',
         cwd: '.',
         src: '.',
         dest: '/tmp',

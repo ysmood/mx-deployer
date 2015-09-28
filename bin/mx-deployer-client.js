@@ -7,7 +7,7 @@ var main = require('../lib/client');
 cmder
     .usage('the cwd of pre-deploy is the src, the cwd of post-deploy is dest')
     .option('--gitUrl <str>', 'the url of the git repo')
-    .option('--branch <str>', 'the git branch to use [master]')
+    .option('--ref <str>', 'the git ref to use [master]')
     .option('--removeTmp', 'remove the tmp dir before clone')
     .option('--removeDest', 'remove the dest before copy src to dest')
     .option('--cwd <str>', 'the cwd directory is relative to the git repo [.]')

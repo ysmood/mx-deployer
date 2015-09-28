@@ -30,10 +30,10 @@ function spawn (cmd, ...args) {
     try {
         await spawn('git', ['status'], { cwd: gitTmp });
         await spawn('git', ['fetch'], { cwd: gitTmp });
-        await spawn('git', ['reset', '--hard', `origin/${info.branch}`], { cwd: gitTmp });
+        await spawn('git', ['reset', '--hard', `origin/${info.ref}`], { cwd: gitTmp });
     } catch (err) {
         kit.removeSync(gitTmp);
-        await spawn('git', ['clone', '-b', info.branch, info.gitUrl, gitTmp]);
+        await spawn('git', ['clone', '-b', info.ref, info.gitUrl, gitTmp]);
     }
 
     let src = kit.path.join(gitTmp, info.src);
