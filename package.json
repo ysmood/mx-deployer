@@ -3,6 +3,10 @@
   "version": "0.0.1",
   "description": "a auto deployer client & server",
   "main": "lib/index.js",
+  "bin": {
+    "mx-deployer-client": "bin/mx-deployer-client.js",
+    "mx-deployer-server": "bin/mx-deployer-server.js"
+  },
   "scripts": {
     "test": "no test",
     "prepublish": "no build"
@@ -29,6 +33,7 @@
     "send": "0.13.0"
   },
   "files": [
+    "bin",
     "lib"
   ],
   "devDependencies": {

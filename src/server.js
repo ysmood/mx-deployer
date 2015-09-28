@@ -8,16 +8,15 @@ let br = kit.require('brush');
 let proxy = kit.require('proxy');
 let { match, select } = proxy;
 let { spawn } = require('child_process');
-let fs = require('fs');
 let path = require('path');
 
 let app = proxy.flow();
 
-var addLog = (info, proc) => {
+var addLog = async (info, proc) => {
     let now = new Date();
     let logName = path.join(__dirname, '../log/' + 
-        now.getFullYear() + "-" + (now.getMonth() + 1) + "-" + now.getDate() + '.log');
-    let logStream = fs.createWriteStream(logName, {
+        now.getDate() + '.log');
+    let logStream = kit.createWriteStream(logName, {
         flags: 'a'
     });
     logStream.write("[time:" + now.getTime() + "]\n");
@@ -31,6 +30,8 @@ export default async (opts) => {
         port: 8710,
         bin: 'node'
     });
+    
+    await kit.mkdirs(path.join(__dirname, '../log'));
 
     app.push(
         proxy.body(),
