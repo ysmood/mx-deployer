@@ -6,9 +6,9 @@ import utils from './utils';
 let br = kit.require('brush');
 let info = JSON.parse(process.argv[2]);
 
-if (utils.isMaliciousPath(info.gitUrl)) {
-    throw new Error(`gitUrl is illegal: ${info.gitUrl}`);
-}
+// if (utils.isMaliciousPath(info.gitUrl)) {
+//     throw new Error(`gitUrl is illegal: ${info.gitUrl}`);
+// }
 
 let gitTmp = kit.path.join('/tmp/mx-deployer-git', info.user, info.gitUrl);
 
