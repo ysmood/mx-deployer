@@ -10,7 +10,7 @@ if (utils.isMaliciousPath(info.gitUrl)) {
     throw new Error(`gitUrl is illegal: ${info.gitUrl}`);
 }
 
-let gitTmp = kit.path.join('/tmp/git', info.gitUrl);
+let gitTmp = kit.path.join('/tmp/mx-deployer-git', info.user, info.gitUrl);
 
 function spawn (cmd, ...args) {
     kit.logs.apply(0, [br.cyan(cmd)].concat(args));

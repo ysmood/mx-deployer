@@ -18,6 +18,7 @@ export default (it) => [
         let now = Date.now();
 
         await remove(repo);
+        await remove(dest);
         await mkdirs(repo);
         await spawn('git', ['init'], { cwd: repo });
         await outputFile(repo + '/pre-deploy.sh', `echo "${now}"\npwd`);
@@ -38,6 +39,7 @@ export default (it) => [
         await app.close();
 
         await it.eq(body.indexOf(`${now}`) > 0, true);
-        await it.eq(body.indexOf(`/tmp/git${repo}`) > 0, true);
+        let out = await kit.readFile(dest + '/pre-deploy.sh', 'utf8');
+        await it.eq(out.indexOf(`${now}`) > 0, true);
     })
 ];
