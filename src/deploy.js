@@ -5,7 +5,7 @@ import kit from 'nokit';
 let br = kit.require('brush');
 let info = JSON.parse(process.argv[2]);
 
-let gitTmp = `/tmp/mx-deployer-git/${info.user + info.gitUrl.replace(/\//g, '')}`;
+let gitTmp = `/tmp/mx-deployer-git/${info.user + info.gitUrl.replace(/\//g, '-')}`;
 
 function spawn (cmd, ...args) {
     kit.logs.apply(0, [br.cyan(cmd)].concat(args));
@@ -20,7 +20,7 @@ function spawn (cmd, ...args) {
         await spawn('git', ['fetch', 'origin', info.branch], { cwd: gitTmp });
         await spawn('git', ['reset', '--hard', `origin/${info.branch}`], { cwd: gitTmp });
     } catch (err) {
-        await kit.remove(gitTmp);
+        await kit.removeSync(gitTmp);
         await spawn('git', ['clone', '-b', info.branch, info.gitUrl, gitTmp]);
     }
 
@@ -31,9 +31,9 @@ function spawn (cmd, ...args) {
 
     kit.logs(br.cyan('copy:'), src, '->', info.dest);
     if (await kit.dirExists(info.dest))
-        await kit.copy(src, kit.path.dirname(info.dest), { isForce: true });
+        await kit.copySync(src, kit.path.dirname(info.dest), { isForce: true });
     else
-        await kit.copy(src, info.dest, { isForce: true });
+        await kit.copySync(src, info.dest, { isForce: true });
 
     if (info.postDeploy)
         await spawn('bash', [info.postDeploy], { cwd: info.dest });

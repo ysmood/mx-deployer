@@ -1,6 +1,6 @@
 {
   "name": "mx-deployer",
-  "version": "0.0.2",
+  "version": "0.0.4",
   "description": "a auto deployer client & server",
   "main": "lib/index.js",
   "bin": {

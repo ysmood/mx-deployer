@@ -12,9 +12,9 @@ let path = require('path');
 
 let app = proxy.flow();
 
-var addLog = async (info, proc) => {
+var addLog = (info, proc) => {
     let now = new Date();
-    let logName = path.join(__dirname, '../log/' + 
+    let logName = path.join(__dirname, '../log/' +
         now.getDate() + '.log');
     let logStream = kit.createWriteStream(logName, {
         flags: 'a'
@@ -23,14 +23,14 @@ var addLog = async (info, proc) => {
     logStream.write("[user:" + info.user + "]\n");
     proc.stdout.pipe(logStream);
     proc.stderr.pipe(logStream);
-}
+};
 
 export default async (opts) => {
     opts = kit._.defaults(opts, {
         port: 8710,
         bin: 'node'
     });
-    
+
     await kit.mkdirs(path.join(__dirname, '../log'));
 
     app.push(
@@ -38,19 +38,27 @@ export default async (opts) => {
 
         select(match('/deploy'), ($) => {
             let info = JSON.parse($.reqBody);
-
-            kit.logs(br.cyan('deploy:'), info.gitUrl);
+            let isDone = false;
 
             let proc = spawn(opts.bin, ['deploy', $.reqBody], {
                 cwd: __dirname
             });
 
+            kit.logs(br.cyan('deploy:'), proc.pid, info.gitUrl);
+
             let kill = () => {
-                kit.logs(br.red('kill task'), info.gitUrl);
+                if (isDone) return;
+                kit.logs(br.red('kill task'), isDone, info.gitUrl);
                 proc.kill();
             };
 
+            proc.on('exit', (code, sig) => {
+                kit.logs(br.cyan('task exit'), proc.pid, info.gitUrl, code, sig);
+                isDone = true;
+            });
+
             $.res.on('error', kill);
+            $.res.on('close', kill);
 
             proc.stdout.pipe($.res);
             proc.stderr.pipe($.res);
