@@ -34,9 +34,7 @@ export default async (opts) => {
             };
 
             ctx.res.on('error', kill);
-            // ctx.res.on('finish', kill);
 
-            process.stdin.pipe(proc.stdin);
             proc.stdout.pipe(ctx.res);
             proc.stderr.pipe(ctx.res);
 
