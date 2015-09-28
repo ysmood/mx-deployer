@@ -20,12 +20,12 @@ export default async (opts) => {
     app.push(
         proxy.body(),
 
-        select(match('/deploy'), (ctx) => {
-            let info = JSON.parse(ctx.reqBody);
+        select(match('/deploy'), ($) => {
+            let info = JSON.parse($.reqBody);
 
             kit.logs(br.cyan('deploy:'), info.gitUrl);
 
-            let proc = spawn(opts.bin, ['deploy', ctx.reqBody], {
+            let proc = spawn(opts.bin, ['deploy', $.reqBody], {
                 cwd: __dirname
             });
 
@@ -34,10 +34,10 @@ export default async (opts) => {
                 proc.kill();
             };
 
-            ctx.res.on('error', kill);
+            $.res.on('error', kill);
 
-            proc.stdout.pipe(ctx.res);
-            proc.stderr.pipe(ctx.res);
+            proc.stdout.pipe($.res);
+            proc.stderr.pipe($.res);
 
             return kit.end();
         })
