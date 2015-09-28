@@ -9,17 +9,18 @@ let proxy = kit.require('proxy');
 let { match, select } = proxy;
 let { spawn } = require('child_process');
 
-let port = 8710;
-
 let app = proxy.flow();
 
-app.push(
-    select(match('/deploy'), (ctx) => {
-        ctx.req.on('data', (data) => {
-            let info = JSON.parse(data);
+export default async (opts) => {
+    app.push(
+        proxy.body(),
+
+        select(match('/deploy'), (ctx) => {
+            let info = JSON.parse(ctx.reqBody);
+
             kit.logs(br.cyan('deploy:'), info.gitUrl);
 
-            let proc = spawn('babel-node', ['deploy', data], {
+            let proc = spawn('node', ['deploy', ctx.reqBody], {
                 cwd: __dirname
             });
 
@@ -34,12 +35,12 @@ app.push(
             process.stdin.pipe(proc.stdin);
             proc.stdout.pipe(ctx.res);
             proc.stderr.pipe(ctx.res);
-        });
 
-        return kit.end();
-    })
-);
+            return kit.end();
+        })
+    );
 
-app.listen(port, () => {
-    kit.logs('listen at', port);
-});
+    app.listen(opts.port, () => {
+        kit.logs('listen at', opts.port);
+    });
+};

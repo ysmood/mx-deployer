@@ -33,8 +33,13 @@ function spawn () {
     kit.logs(br.yellow('remove:'), info.dist);
     await kit.remove(info.dist);
 
-    kit.logs(br.cyan('copy:'), temp + '/asset', 'to', info.dist);
-    await kit.copy(temp + '/asset', info.dist);
+    let src = kit.path.join(gitTmp, info.src);
+    kit.logs(br.cyan('copy:'), src, '->', info.dist);
+    await kit.copy(src, info.dist);
+
+    if (info.postDeploy)
+        await spawn('bash', [info.postDeploy], { cwd: info.dist });
 
     kit.logs(br.green('deploy done.'));
-})();
+})()
+.catch(kit.throw);
