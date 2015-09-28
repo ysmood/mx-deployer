@@ -1,6 +1,7 @@
 #!/usr/bin/env node
 var cmder = require('commander');
 var utils = require('../lib/utils');
+var kit = require('nokit');
 var main = require('../lib/client');
 
 cmder
@@ -16,9 +17,4 @@ cmder
 .parse(process.argv);
 
 main(utils.getOpts(cmder))
-.catch(function (err) {
-    setTimeout(function () {
-        throw err;
-    });
-});
-
+.catch(kit.throw);
