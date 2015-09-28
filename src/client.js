@@ -9,6 +9,7 @@ export default async (opts) => {
         dest: '/tmp',
         host: '127.0.0.1:8710',
         user: '',
+        bin: 'bash',
         preDeploy: null,
         postDeploy: null
     });
@@ -24,6 +25,6 @@ export default async (opts) => {
         url: opts.host + '/deploy',
         resPipe: opts.resPipe,
         body: false,
-        reqData: JSON.stringify(opts)
+        reqData: JSON.stringify(kit._.omit(opts, "resPipe"))
     });
 };

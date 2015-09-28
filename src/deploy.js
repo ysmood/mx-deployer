@@ -20,15 +20,17 @@ function spawn (cmd, ...args) {
 (async function () {
     kit.logs('begin deploy:', info);
 
-    if (await kit.dirExists(gitTmp)) {
+    try {
+        await spawn('git', ['status'], { cwd: gitTmp });
         await spawn('git', ['fetch', 'origin', info.branch], { cwd: gitTmp });
         await spawn('git', ['reset', '--hard', `origin/${info.branch}`], { cwd: gitTmp });
-    } else {
+    } catch (err) {
+        await kit.remove(gitTmp);
         await spawn('git', ['clone', '-b', info.branch, info.gitUrl, gitTmp]);
     }
 
     if (info.preDeploy)
-        await spawn('bash', [info.preDeploy], { cwd: gitTmp });
+        await spawn(info.bin, [info.preDeploy], { cwd: gitTmp });
 
     let src = kit.path.join(gitTmp, info.src);
 
