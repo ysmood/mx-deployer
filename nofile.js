@@ -8,7 +8,7 @@ export default (task) => {
         ]);
     });
 
-    task('test', ['build'], async () => {
+    task('test', async () => {
         await kit.spawn('junit', ['test/basic.js']);
     });
 };

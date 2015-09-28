@@ -13,7 +13,8 @@ let app = proxy.flow();
 
 export default async (opts) => {
     opts = kit._.defaults(opts, {
-        port: 8710
+        port: 8710,
+        bin: 'node'
     });
 
     app.push(
@@ -24,7 +25,7 @@ export default async (opts) => {
 
             kit.logs(br.cyan('deploy:'), info.gitUrl);
 
-            let proc = spawn('node', ['deploy', ctx.reqBody], {
+            let proc = spawn(opts.bin, ['deploy', ctx.reqBody], {
                 cwd: __dirname
             });
 

@@ -1,6 +1,6 @@
 import kit from 'nokit';
-import server from '../lib/server';
-import client from '../lib/client';
+import server from '../src/server';
+import client from '../src/client';
 
 let { remove, mkdirs, outputFile } = kit;
 
@@ -25,7 +25,7 @@ export default (it) => [
         await spawn('git', ['add', '--all']);
         await spawn('git', ['commit', '-m', 'init']);
 
-        let app = await server({ port: 0 });
+        let app = await server({ port: 0, bin: 'babel-node' });
         let { port } = app.server.address();
 
         let { body } = await client({
