@@ -4,7 +4,8 @@
   "description": "a auto deployer client & server",
   "main": "lib/index.js",
   "scripts": {
-    "test": "no test"
+    "test": "no test",
+    "prepublish": "no build"
   },
   "repository": {
     "type": "git",
