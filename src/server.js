@@ -44,7 +44,7 @@ export default async (opts) => {
 
     await app.listen(opts.port);
 
-    kit.logs('listen at', opts.port);
+    kit.logs('listen at', app.server.address().port);
 
     return app;
 };

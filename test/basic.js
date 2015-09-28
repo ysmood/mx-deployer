@@ -27,7 +27,8 @@ export default (it) => [
         let app = await server({ port: 0 });
         let { port } = app.server.address();
 
-        await client({
+        let { body } = await client({
+            resPipe: null,
             host: `127.0.0.1:${port}`,
             gitUrl: repo,
             dest: dest,
@@ -35,5 +36,8 @@ export default (it) => [
         });
 
         await app.close();
+
+        await it.eq(body.indexOf(`${now}`) > 0, true);
+        await it.eq(body.indexOf(`/tmp/git${repo}`) > 0, true);
     })
 ];

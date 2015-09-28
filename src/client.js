@@ -2,6 +2,7 @@ import kit from 'nokit';
 
 export default async (opts) => {
     opts = kit._.defaults(opts, {
+        resPipe: process.stdout,
         gitUrl: null,
         branch: 'master',
         src: '.',
@@ -21,7 +22,8 @@ export default async (opts) => {
     return kit.request({
         method: 'POST',
         url: opts.host + '/deploy',
-        resPipe: process.stdout,
+        resPipe: opts.resPipe,
+        body: false,
         reqData: JSON.stringify(opts)
     });
 };
