@@ -12,6 +12,10 @@ let { spawn } = require('child_process');
 let app = proxy.flow();
 
 export default async (opts) => {
+    opts = kit._.defaults(opts, {
+        port: 8710
+    });
+
     app.push(
         proxy.body(),
 

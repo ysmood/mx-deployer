@@ -1,7 +1,6 @@
 #!/usr/bin/env node
 var cmder = require('commander');
-
-
+var utils = require('../lib/utils');
 var main = require('../lib/client');
 
 cmder
@@ -14,7 +13,7 @@ cmder
     .option('--postDeploy', 'the script to run after deploy [post-deploy.sh]')
 .parse(process.argv);
 
-main(cmder.options.map(function (o) { return o.long.slice(2); }))
+main(utils.getOpts(cmder))
 .catch(function (err) {
     setTimeout(function () {
         throw err;
