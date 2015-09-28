@@ -3,6 +3,15 @@ import kit from 'nokit';
 let br = kit.require('brush');
 
 export default async (opts) => {
+    opts = kit._.defaults(opts, {
+        src: '.',
+        dist: '/tmp',
+        host: '127.0.0.1:8710',
+        user: '',
+        preDeploy: 'pre-deploy.sh',
+        postDeploy: 'post-deploy.sh'
+    });
+
     let exec = kit.promisify(require('child_process').exec);
     let gitUrl;
 
