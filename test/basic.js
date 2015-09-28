@@ -2,7 +2,7 @@ import kit from 'nokit';
 import server from '../lib/server';
 import client from '../lib/client';
 
-let { remove, mkdir, outputFile } = kit;
+let { remove, mkdirs, outputFile } = kit;
 
 function genSpawn (cwd) {
     return function (cmd, args) {
@@ -18,7 +18,7 @@ export default (it) => [
         let now = Date.now();
 
         await remove(repo);
-        await mkdir(repo);
+        await mkdirs(repo);
         await spawn('git', ['init'], { cwd: repo });
         await outputFile(repo + '/pre-deploy.sh', `echo "${now}"\npwd`);
         await spawn('git', ['add', '--all']);
