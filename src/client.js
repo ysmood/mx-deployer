@@ -1,27 +1,22 @@
 import kit from 'nokit';
 
-let br = kit.require('brush');
-
 export default async (opts) => {
     opts = kit._.defaults(opts, {
+        gitUrl: null,
+        branch: 'master',
         src: '.',
-        dist: '/tmp',
+        dest: '/tmp',
         host: '127.0.0.1:8710',
         user: '',
-        preDeploy: 'pre-deploy.sh',
-        postDeploy: 'post-deploy.sh'
+        preDeploy: null,
+        postDeploy: null
     });
 
-    let exec = kit.promisify(require('child_process').exec);
-    let gitUrl;
-
-    try {
-        gitUrl = await exec('git config --get remote.origin.url');
-    } catch (err) {
-        kit.err(br.red('please make sure you have set git remote correctly'));
+    if (!opts.gitUrl) {
+        throw new Error(`gitUrl must be set, now: ${opts.gitUrl}`);
     }
 
-    gitUrl = gitUrl.trim();
+    opts.gitUrl = opts.gitUrl.trim();
 
     return kit.request({
         method: 'POST',

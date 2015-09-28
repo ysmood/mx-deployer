@@ -34,7 +34,7 @@ export default async (opts) => {
             };
 
             ctx.res.on('error', kill);
-            ctx.res.on('finish', kill);
+            // ctx.res.on('finish', kill);
 
             process.stdin.pipe(proc.stdin);
             proc.stdout.pipe(ctx.res);
@@ -44,7 +44,9 @@ export default async (opts) => {
         })
     );
 
-    app.listen(opts.port, () => {
-        kit.logs('listen at', opts.port);
-    });
+    await app.listen(opts.port);
+
+    kit.logs('listen at', opts.port);
+
+    return app;
 };

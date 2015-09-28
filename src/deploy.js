@@ -12,33 +12,34 @@ if (utils.isMaliciousPath(info.gitUrl)) {
 
 let gitTmp = kit.path.join('/tmp/git', info.gitUrl);
 
-function spawn () {
-    kit.logs.apply(0, [br.cyan()].concat(arguments));
-    kit.spawn.apply(0, arguments);
+function spawn (cmd, ...args) {
+    kit.logs.apply(0, [br.cyan(cmd)].concat(args));
+    return kit.spawn.apply(0, arguments);
 }
 
 (async function () {
-    kit.logs('begin deploy:', info.gitUrl);
+    kit.logs('begin deploy:', info);
 
     if (await kit.dirExists(gitTmp)) {
-        await spawn('git', ['pull', '-b', info.branch, info.gitUrl, gitTmp]);
+        await spawn('git', ['fetch', 'origin', info.branch], { cwd: gitTmp });
+        await spawn('git', ['reset', '--hard', `origin/${info.branch}`], { cwd: gitTmp });
     } else {
         await spawn('git', ['clone', '-b', info.branch, info.gitUrl, gitTmp]);
     }
 
-
     if (info.preDeploy)
         await spawn('bash', [info.preDeploy], { cwd: gitTmp });
 
-    kit.logs(br.yellow('remove:'), info.dist);
-    await kit.remove(info.dist);
-
     let src = kit.path.join(gitTmp, info.src);
-    kit.logs(br.cyan('copy:'), src, '->', info.dist);
-    await kit.copy(src, info.dist);
+
+    kit.logs(br.cyan('copy:'), src, '->', info.dest);
+    if (await kit.dirExists(info.dest))
+        await kit.copy(src, kit.path.dirname(info.dest), { isForce: true });
+    else
+        await kit.copy(src, info.dest, { isForce: true });
 
     if (info.postDeploy)
-        await spawn('bash', [info.postDeploy], { cwd: info.dist });
+        await spawn('bash', [info.postDeploy], { cwd: info.dest });
 
     kit.logs(br.green('deploy done.'));
 })()
