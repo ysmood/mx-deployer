@@ -5,7 +5,7 @@ import kit from 'nokit';
 let br = kit.require('brush');
 let info = JSON.parse(process.argv[2]);
 
-let gitTmp = kit.path.join('/tmp/mx-deployer-git', info.user, info.gitUrl);
+let gitTmp = `/tmp/mx-deployer-git/${info.user + info.gitUrl.replace(/\//g, '')}`;
 
 function spawn (cmd, ...args) {
     kit.logs.apply(0, [br.cyan(cmd)].concat(args));
