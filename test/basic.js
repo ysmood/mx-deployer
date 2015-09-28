@@ -38,6 +38,7 @@ export default (it) => [
 
         await app.close();
 
+        console.log(body);
         await it.eq(body.indexOf(`${now}`) > 0, true);
         let out = await kit.readFile(dest + '/pre-deploy.sh', 'utf8');
         await it.eq(out.indexOf(`${now}`) > 0, true);

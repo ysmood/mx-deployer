@@ -44,21 +44,30 @@ export default async (opts) => {
                 cwd: __dirname
             });
 
-            kit.logs(br.cyan('deploy:'), proc.pid, info.gitUrl);
+            let logTitle = `${info.gitUrl} ${info.user} ${proc.pid}`;
+
+            kit.logs('deploy:', logTitle);
 
             let kill = () => {
                 if (isDone) return;
-                kit.logs(br.red('kill task'), isDone, info.gitUrl);
+                kit.logs('kill task', logTitle);
                 proc.kill();
             };
 
             proc.on('exit', (code, sig) => {
-                kit.logs(br.cyan('task exit'), proc.pid, info.gitUrl, code, sig);
+                kit.logs(br.cyan('task exit'), logTitle, code, sig);
                 isDone = true;
             });
 
-            $.res.on('error', kill);
-            $.res.on('close', kill);
+            $.res.on('error', (err) => {
+                kit.logs('task err', logTitle, err);
+                kill();
+            });
+
+            $.res.on('close', (err) => {
+                kit.logs('task close by remote', logTitle, err);
+                kill();
+            });
 
             proc.stdout.pipe($.res);
             proc.stderr.pipe($.res);

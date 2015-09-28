@@ -3,8 +3,11 @@ import kit from 'nokit';
 export default async (opts) => {
     opts = kit._.defaults(opts, {
         resPipe: process.stdout,
+        removeTmp: false,
+        removeDest: false,
         gitUrl: null,
         branch: 'master',
+        cwd: '.',
         src: '.',
         dest: '/tmp',
         host: '127.0.0.1:8710',
