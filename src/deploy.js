@@ -1,7 +1,6 @@
 'use strict';
 
 import kit from 'nokit';
-import os from 'os';
 
 kit.require('url');
 let br = kit.require('brush');
@@ -9,7 +8,7 @@ let info = JSON.parse(process.argv[2]);
 
 let parsedGitUrl = kit.url.parse(info.gitUrl);
 let gitTmp = kit.path.join(
-    os.homedir(),
+    process.env.HOME,
     'mx-deployer-git',
     (info.user + parsedGitUrl.host + parsedGitUrl.path).replace(/\//g, '-')
 );
