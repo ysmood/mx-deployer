@@ -46,7 +46,7 @@ function spawn (cmd, ...args) {
         kit.removeSync(info.dest);
     }
 
-    await spawn('rsync', ['-r', kit.path.normalize(src + '/'), info.dest]);
+    await spawn('rsync', ['-r', '--copy-links', kit.path.normalize(src + '/'), info.dest]);
 
     if (info.postDeploy)
         await spawn('bash', [info.postDeploy], { cwd: info.dest });
